@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -119,9 +120,9 @@ func GetPromptAndParameters(req *GetPromptAndParametersRequest) (*GetPromptAndPa
 		case "version", "v":
 			temp, err := strconv.ParseFloat(val, 10)
 			tempVal := int(temp * 10)
-			// "1", "2", "3", "4", "5", "5.1", "5.2", "6", "6.1", "7"
-			if err != nil || (temp != 40 && temp != 50 && tempVal != 51 && tempVal != 52 && tempVal != 60 && tempVal != 61 && tempVal != 70) {
-				return nil, fmt.Errorf("%s参数值必须是4, 5, 5.1, 5.2, 6, 6.1, 7", param)
+			// "1", "2", "3", "4", "5", "5.1", "5.2", "6", "6.1", "7", "8", "8.1"
+			if err != nil || !isContains([]int{40, 50, 51, 52, 60, 61, 71, 80, 81}, tempVal) {
+				return nil, fmt.Errorf("%s参数值必须是4, 5, 5.1, 5.2, 6, 6.1, 7, 8, 8.1", param)
 			}
 			//清理模型niji
 			if _, ok := parameters["niji"]; ok {
@@ -203,4 +204,21 @@ func GetPromptAndParameters(req *GetPromptAndParametersRequest) (*GetPromptAndPa
 		Prompt:     prompt,
 		Parameters: parameters,
 	}, nil
+}
+
+// 判断是否在切片
+func isContains(items interface{}, item interface{}) bool {
+	s := reflect.ValueOf(items)
+	if s.Kind() != reflect.Slice {
+		return false
+	}
+
+	v := reflect.ValueOf(item)
+	for i := 0; i < s.Len(); i++ {
+		if s.Index(i).Interface() == v.Interface() {
+			return true
+		}
+	}
+
+	return false
 }
