@@ -121,7 +121,7 @@ func GetPromptAndParameters(req *GetPromptAndParametersRequest) (*GetPromptAndPa
 			temp, err := strconv.ParseFloat(val, 10)
 			tempVal := int(temp * 10)
 			// "1", "2", "3", "4", "5", "5.1", "5.2", "6", "6.1", "7", "8", "8.1"
-			if err != nil || !isContains([]int{40, 50, 51, 52, 60, 61, 71, 80, 81}, tempVal) {
+			if err != nil || !isContains([]int{40, 50, 51, 52, 60, 61, 70, 80, 81}, tempVal) {
 				return nil, fmt.Errorf("%s参数值必须是4, 5, 5.1, 5.2, 6, 6.1, 7, 8, 8.1", param)
 			}
 			//清理模型niji
